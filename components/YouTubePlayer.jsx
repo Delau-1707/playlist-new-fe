@@ -9,10 +9,7 @@ export default function YouTubePlayer({ song }) {
     );
   }
 
-  const embedUrl =
-    `https://www.youtube.com/embed/${song.videoId}` +
-    `?rel=0` +
-    `&origin=http://localhost:3000`;
+  const embedUrl = `https://www.youtube.com/embed/${song.videoId}` + `?rel=0`;
 
   return (
     <div className="aspect-video overflow-hidden rounded-2xl bg-black">

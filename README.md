@@ -36,7 +36,7 @@ Import the frontend Git repository as a Vercel project. Since the frontend is it
 Add this environment variable in the Vercel project settings for Production (and Preview if needed):
 
 ```text
-NEXT_PUBLIC_API_URL=https://<backend-deployment>.vercel.app/api
+API_URL=https://playlist-new-be.vercel.app/api/
 ```
 
-Replace the example host with the deployed backend URL. The backend's `FRONTEND_URL` must be set to this frontend's origin, without a trailing slash.
+The backend's `FRONTEND_URL` must be set to this frontend's origin, without a trailing slash.

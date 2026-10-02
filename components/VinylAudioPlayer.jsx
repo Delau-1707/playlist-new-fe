@@ -1,37 +1,24 @@
 "use client";
 
 import { useRef, useState } from "react";
-import {
-  Pause,
-  Play,
-  Volume2,
-} from "lucide-react";
+import { Pause, Play, Volume2 } from "lucide-react";
+import { API_BASE_URL } from "../lib/api";
 
-
-export default function VinylAudioPlayer({
-  song,
-}) {
+export default function VinylAudioPlayer({ song }) {
   const audioRef = useRef(null);
 
-  const [isPlaying, setIsPlaying] =
-    useState(false);
+  const [isPlaying, setIsPlaying] = useState(false);
 
-  const [currentTime, setCurrentTime] =
-    useState(0);
+  const [currentTime, setCurrentTime] = useState(0);
 
-  const [duration, setDuration] =
-    useState(0);
-
+  const [duration, setDuration] = useState(0);
 
   if (!song) {
     return null;
   }
 
-
   const streamUrl =
-    `http://localhost:4000/api/audius/stream/` +
-    encodeURIComponent(song.sourceId);
-
+    `${API_BASE_URL}/audius/stream/` + encodeURIComponent(song.sourceId);
 
   async function togglePlay() {
     const audio = audioRef.current;
@@ -51,60 +38,47 @@ export default function VinylAudioPlayer({
     }
   }
 
-
   function formatTime(seconds) {
     if (!Number.isFinite(seconds)) {
       return "0:00";
     }
 
-    const minutes =
-      Math.floor(seconds / 60);
+    const minutes = Math.floor(seconds / 60);
 
-    const remainingSeconds =
-      Math.floor(seconds % 60)
-        .toString()
-        .padStart(2, "0");
+    const remainingSeconds = Math.floor(seconds % 60)
+      .toString()
+      .padStart(2, "0");
 
     return `${minutes}:${remainingSeconds}`;
   }
-
 
   function handleTimeUpdate() {
     if (!audioRef.current) {
       return;
     }
 
-    setCurrentTime(
-      audioRef.current.currentTime
-    );
+    setCurrentTime(audioRef.current.currentTime);
   }
-
 
   function handleLoadedMetadata() {
     if (!audioRef.current) {
       return;
     }
 
-    setDuration(
-      audioRef.current.duration
-    );
+    setDuration(audioRef.current.duration);
   }
-
 
   function handlePlay() {
     setIsPlaying(true);
   }
 
-
   function handlePause() {
     setIsPlaying(false);
   }
 
-
   function handleEnded() {
     setIsPlaying(false);
   }
-
 
   function handleSeek(event) {
     const audio = audioRef.current;
@@ -113,14 +87,12 @@ export default function VinylAudioPlayer({
       return;
     }
 
-    const newTime =
-      Number(event.target.value);
+    const newTime = Number(event.target.value);
 
     audio.currentTime = newTime;
 
     setCurrentTime(newTime);
   }
-
 
   return (
     <div className="rounded-3xl border border-white/10 bg-zinc-900 p-8">
@@ -139,9 +111,7 @@ export default function VinylAudioPlayer({
         <div className="relative h-72 w-72">
           <div
             className={`h-full w-full rounded-full bg-zinc-950 ${
-              isPlaying
-                ? "animate-spin"
-                : ""
+              isPlaying ? "animate-spin" : ""
             }`}
             style={{
               animationDuration: "4s",
@@ -159,15 +129,10 @@ export default function VinylAudioPlayer({
           </div>
         </div>
 
-
         <div className="mt-8 text-center">
-          <h2 className="max-w-xl text-2xl font-bold">
-            {song.title}
-          </h2>
+          <h2 className="max-w-xl text-2xl font-bold">{song.title}</h2>
 
-          <p className="mt-2 text-zinc-400">
-            {song.artist}
-          </p>
+          <p className="mt-2 text-zinc-400">{song.artist}</p>
 
           <div className="mt-6 flex items-center gap-4">
             <span className="text-sm text-zinc-500">
@@ -188,18 +153,13 @@ export default function VinylAudioPlayer({
             </span>
           </div>
 
-
           <div className="mt-6 flex items-center justify-center gap-4">
             <button
               type="button"
               onClick={togglePlay}
               className="flex h-14 w-14 items-center justify-center rounded-full bg-white text-black"
             >
-              {isPlaying ? (
-                <Pause size={22} />
-              ) : (
-                <Play size={22} />
-              )}
+              {isPlaying ? <Pause size={22} /> : <Play size={22} />}
             </button>
 
             <Volume2 size={20} />
