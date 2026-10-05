@@ -19,27 +19,38 @@ export default function PlaylistPage() {
 
 
   useEffect(() => {
-    loadPlaylist();
-  }, []);
+    let cancelled = false;
 
+    async function fetchPlaylist() {
+      try {
+        const clientId = getClientId();
 
-  async function loadPlaylist() {
-    try {
-      const data = await apiFetch(
-        `/playlist?clientId=${getClientId()}`
-      );
+        const data = await apiFetch(
+          `/playlist?clientId=${encodeURIComponent(clientId ?? "")}`
+        );
 
-      setItems(data.items);
-    } catch (error) {
-      console.error(error);
+        if (!cancelled) {
+          setItems(data.items ?? []);
+        }
+      } catch (error) {
+        console.error(error);
+      }
     }
-  }
+
+    fetchPlaylist();
+
+    return () => {
+      cancelled = true;
+    };
+  }, []);
 
 
   async function removeItem(id) {
     try {
+      const clientId = getClientId();
+
       await apiFetch(
-        `/playlist/items/${id}?clientId=${getClientId()}`,
+        `/playlist/items/${encodeURIComponent(id)}?clientId=${encodeURIComponent(clientId ?? "")}`,
         {
           method: "DELETE",
         }
@@ -96,16 +107,26 @@ export default function PlaylistPage() {
 
 
       <div className="mt-10 space-y-4">
+        {items.length === 0 && (
+          <p className="text-sm text-zinc-500">
+            Playlist masih kosong.
+          </p>
+        )}
+
         {items.map((item) => (
           <div
             key={item.id}
             className="flex items-center gap-4 rounded-2xl border border-white/10 bg-zinc-900 p-4"
           >
-            <img
-              src={item.thumbnail_url}
-              alt={item.title}
-              className="h-20 w-32 rounded-lg object-cover"
-            />
+            {item.thumbnail_url ? (
+              <img
+                src={item.thumbnail_url}
+                alt={item.title}
+                className="h-20 w-32 rounded-lg object-cover"
+              />
+            ) : (
+              <div className="h-20 w-32 shrink-0 rounded-lg bg-zinc-800" />
+            )}
 
 
             <div className="min-w-0 flex-1">

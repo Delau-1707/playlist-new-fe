@@ -4,6 +4,9 @@ import { useRef, useState } from "react";
 import { Pause, Play, Volume2 } from "lucide-react";
 import { API_BASE_URL } from "../lib/api";
 
+const PLACEHOLDER =
+  "data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='400'%3E%3Crect width='400' height='400' fill='%2318181b'/%3E%3Ccircle cx='200' cy='200' r='60' fill='%233f3f46'/%3E%3Ccircle cx='200' cy='200' r='12' fill='%23a1a1aa'/%3E%3C/svg%3E";
+
 export default function VinylAudioPlayer({ song }) {
   const audioRef = useRef(null);
 
@@ -18,7 +21,8 @@ export default function VinylAudioPlayer({ song }) {
   }
 
   const streamUrl =
-    `${API_BASE_URL}/audius/stream/` + encodeURIComponent(song.sourceId);
+    `${API_BASE_URL}/audius/stream/` +
+    encodeURIComponent(song.sourceId ?? "");
 
   async function togglePlay() {
     const audio = audioRef.current;
@@ -65,7 +69,13 @@ export default function VinylAudioPlayer({ song }) {
       return;
     }
 
-    setDuration(audioRef.current.duration);
+    if (!Number.isFinite(audio.duration)) {
+      setDuration(0);
+
+      return;
+    }
+
+    setDuration(audio.duration);
   }
 
   function handlePlay() {
@@ -118,8 +128,8 @@ export default function VinylAudioPlayer({ song }) {
             }}
           >
             <img
-              src={song.thumbnail}
-              alt={song.title}
+              src={song.thumbnail || PLACEHOLDER}
+              alt={song.title || "Lagu"}
               className="h-full w-full rounded-full object-cover p-10"
             />
 
@@ -130,9 +140,13 @@ export default function VinylAudioPlayer({ song }) {
         </div>
 
         <div className="mt-8 text-center">
-          <h2 className="max-w-xl text-2xl font-bold">{song.title}</h2>
+          <h2 className="max-w-xl text-2xl font-bold">
+            {song.title || "Tanpa Judul"}
+          </h2>
 
-          <p className="mt-2 text-zinc-400">{song.artist}</p>
+          <p className="mt-2 text-zinc-400">
+            {song.artist || "Artis Tidak Diketahui"}
+          </p>
 
           <div className="mt-6 flex items-center gap-4">
             <span className="text-sm text-zinc-500">

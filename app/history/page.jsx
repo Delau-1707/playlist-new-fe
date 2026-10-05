@@ -19,27 +19,38 @@ export default function HistoryPage() {
 
 
   useEffect(() => {
-    loadHistory();
-  }, []);
+    let cancelled = false;
 
+    async function fetchHistory() {
+      try {
+        const clientId = getClientId();
 
-  async function loadHistory() {
-    try {
-      const data = await apiFetch(
-        `/history?clientId=${getClientId()}`
-      );
+        const data = await apiFetch(
+          `/history?clientId=${encodeURIComponent(clientId ?? "")}`
+        );
 
-      setHistory(data.items);
-    } catch (error) {
-      console.error(error);
+        if (!cancelled) {
+          setHistory(data.items ?? []);
+        }
+      } catch (error) {
+        console.error(error);
+      }
     }
-  }
+
+    fetchHistory();
+
+    return () => {
+      cancelled = true;
+    };
+  }, []);
 
 
   async function removeHistory(id) {
     try {
+      const clientId = getClientId();
+
       await apiFetch(
-        `/history/${id}?clientId=${getClientId()}`,
+        `/history/${encodeURIComponent(id)}?clientId=${encodeURIComponent(clientId ?? "")}`,
         {
           method: "DELETE",
         }
@@ -103,16 +114,26 @@ export default function HistoryPage() {
 
 
       <div className="mt-10 space-y-4">
+        {history.length === 0 && (
+          <p className="text-sm text-zinc-500">
+            Belum ada riwayat.
+          </p>
+        )}
+
         {history.map((item) => (
           <div
             key={item.id}
             className="flex items-center gap-4 rounded-2xl border border-white/10 bg-zinc-900 p-4"
           >
-            <img
-              src={item.thumbnail_url}
-              alt={item.title}
-              className="h-20 w-32 rounded-lg object-cover"
-            />
+            {item.thumbnail_url ? (
+              <img
+                src={item.thumbnail_url}
+                alt={item.title}
+                className="h-20 w-32 rounded-lg object-cover"
+              />
+            ) : (
+              <div className="h-20 w-32 shrink-0 rounded-lg bg-zinc-800" />
+            )}
 
 
             <div className="min-w-0 flex-1">
