@@ -65,7 +65,9 @@ export default function VinylAudioPlayer({ song }) {
   }
 
   function handleLoadedMetadata() {
-    if (!audioRef.current) {
+    const audio = audioRef.current;
+
+    if (!audio) {
       return;
     }
 
