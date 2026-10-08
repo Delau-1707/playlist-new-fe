@@ -16,6 +16,8 @@ export default function VinylAudioPlayer({ song }) {
 
   const [duration, setDuration] = useState(0);
 
+  const [volume, setVolume] = useState(1);
+
   if (!song) {
     return null;
   }
@@ -106,6 +108,20 @@ export default function VinylAudioPlayer({ song }) {
     setCurrentTime(newTime);
   }
 
+  function handleVolume(event) {
+    const audio = audioRef.current;
+
+    const nextVolume = Number(event.target.value);
+
+    setVolume(nextVolume);
+
+    if (audio) {
+      audio.volume = nextVolume;
+    }
+  }
+
+  const volumePercent = Math.round(volume * 100);
+
   return (
     <div className="rounded-3xl border border-white/10 bg-zinc-900 p-8">
       <audio
@@ -179,6 +195,21 @@ export default function VinylAudioPlayer({ song }) {
             </button>
 
             <Volume2 size={20} />
+
+            <input
+              type="range"
+              min="0"
+              max="1"
+              step="0.05"
+              value={volume}
+              onChange={handleVolume}
+              aria-label="Volume"
+              className="w-24"
+            />
+
+            <span className="w-8 text-sm text-zinc-500">
+              {volumePercent}%
+            </span>
           </div>
         </div>
       </div>

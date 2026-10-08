@@ -3,6 +3,7 @@ import {
   Search,
   Clock3,
   ListMusic,
+  Activity,
 } from "lucide-react";
 
 export default function Navbar() {
@@ -39,6 +40,14 @@ export default function Navbar() {
           >
             <ListMusic size={18} />
             Playlist
+          </Link>
+
+          <Link
+            href="/diagnosa"
+            className="flex items-center gap-2 hover:text-white"
+          >
+            <Activity size={18} />
+            Diagnosa
           </Link>
         </div>
       </div>

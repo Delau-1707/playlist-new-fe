@@ -5,6 +5,7 @@ import { useState } from "react";
 import {
   apiFetch,
   getClientId,
+  API_BASE_URL,
 } from "../../lib/api";
 
 import SongCard from "../../components/SongCard";
@@ -64,7 +65,14 @@ export default function SearchPage() {
 
       setSongs(data.items || []);
     } catch (error) {
-      setMessage(error.message);
+      console.error("Search gagal:", error);
+
+      setMessage(
+        error instanceof TypeError
+          ? `Tidak bisa terhubung ke server (${API_BASE_URL}). Cek koneksi internet atau hubungi admin.`
+          : `Pencarian gagal: ${error.message}`
+      );
+
       setSongs([]);
     } finally {
       setLoading(false);
@@ -138,6 +146,16 @@ export default function SearchPage() {
 
   return (
     <div className="mx-auto max-w-7xl px-6 py-10">
+      <details className="mb-6 rounded-xl border border-white/10 bg-zinc-900/60 p-4 text-xs text-zinc-400">
+        <summary className="cursor-pointer select-none">
+          Info teknis
+        </summary>
+
+        <p className="mt-2 break-all">
+          Server API: <span className="text-zinc-200">{API_BASE_URL}</span>
+        </p>
+      </details>
+
       <div className="mb-10">
         <h1 className="text-4xl font-bold">
           Search Music
