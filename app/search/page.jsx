@@ -5,7 +5,7 @@ import { useState } from "react";
 import {
   apiFetch,
   getClientId,
-  API_BASE_URL,
+  useApiBaseUrl,
 } from "../../lib/api";
 
 import SongCard from "../../components/SongCard";
@@ -13,6 +13,8 @@ import MusicPlayer from "../../components/MusicPlayer";
 
 
 export default function SearchPage() {
+  const apiBaseUrl = useApiBaseUrl();
+
   const [query, setQuery] =
     useState("");
 
@@ -69,7 +71,7 @@ export default function SearchPage() {
 
       setMessage(
         error instanceof TypeError
-          ? `Tidak bisa terhubung ke server (${API_BASE_URL}). Cek koneksi internet atau hubungi admin.`
+          ? `Tidak bisa terhubung ke server (${apiBaseUrl}). Cek koneksi internet atau hubungi admin.`
           : `Pencarian gagal: ${error.message}`
       );
 
@@ -152,7 +154,7 @@ export default function SearchPage() {
         </summary>
 
         <p className="mt-2 break-all">
-          Server API: <span className="text-zinc-200">{API_BASE_URL}</span>
+          Server API: <span className="text-zinc-200">{apiBaseUrl || "-"}</span>
         </p>
       </details>
 

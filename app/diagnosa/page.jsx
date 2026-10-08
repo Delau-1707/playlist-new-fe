@@ -1,12 +1,18 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
-import { API_BASE_URL, apiFetch } from "../../lib/api";
+import { apiFetch, useApiBaseUrl } from "../../lib/api";
 
 export default function DiagnosaPage() {
+  const apiBaseUrl = useApiBaseUrl();
+  const [origin, setOrigin] = useState("-");
   const [results, setResults] = useState([]);
   const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    setOrigin(window.location.origin);
+  }, []);
 
   async function runChecks() {
     setLoading(true);
@@ -81,13 +87,12 @@ export default function DiagnosaPage() {
       <div className="mt-6 rounded-xl border border-white/10 bg-zinc-900 p-4 text-sm">
         <p className="text-zinc-400">Server API yang dipakai:</p>
 
-        <p className="mt-1 break-all font-mono text-zinc-100">{API_BASE_URL}</p>
+        <p className="mt-1 break-all font-mono text-zinc-100">
+          {apiBaseUrl || "-"}
+        </p>
 
         <p className="mt-2 text-zinc-400">
-          Halaman dibuka dari:{" "}
-          <span className="text-zinc-200">
-            {typeof window !== "undefined" ? window.location.origin : "-"}
-          </span>
+          Halaman dibuka dari: <span className="text-zinc-200">{origin}</span>
         </p>
       </div>
 
