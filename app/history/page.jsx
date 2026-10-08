@@ -73,6 +73,13 @@ export default function HistoryPage() {
 
       sourceId: item.source_id,
 
+      // YouTubePlayer memakai videoId, jadi untuk sumber youtube
+      // source_id (video id) harus ikut dipetakan ke videoId.
+      videoId:
+        item.source === "youtube"
+          ? item.source_id
+          : undefined,
+
       title: item.title,
 
       artist: item.artist,

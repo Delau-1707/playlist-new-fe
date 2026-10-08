@@ -70,8 +70,8 @@ export default function SearchPage() {
       console.error("Search gagal:", error);
 
       setMessage(
-        error instanceof TypeError
-          ? `Tidak bisa terhubung ke server (${apiBaseUrl}). Cek koneksi internet atau hubungi admin.`
+        error.isNetworkError
+          ? `${error.message}. Cek koneksi internet atau hubungi admin.`
           : `Pencarian gagal: ${error.message}`
       );
 

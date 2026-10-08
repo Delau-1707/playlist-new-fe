@@ -62,10 +62,9 @@ export default function DiagnosaPage() {
           label: check.label,
           ok: false,
           ms: Date.now() - startedAt,
-          detail:
-            error instanceof TypeError
-              ? "Tidak bisa terhubung ke server (jaringan/CORS/offline)"
-              : error.message,
+          detail: error.isNetworkError
+            ? "Tidak bisa terhubung ke server (jaringan/CORS/offline)"
+            : error.message,
         });
       }
 
